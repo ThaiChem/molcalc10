@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molar Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .calculator {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 8px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 4px;
+            display: none;
+        }
+        .result-item {
+            margin: 10px 0;
+        }
+        .language-buttons {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2 data-translate="title">Molar Calculator</h2>
+        <div class="input-group">
+            <label for="value" data-translate="enterValue">Enter Value:</label>
+            <input type="number" id="value" step="any" min="0" placeholder="Enter value">
+        </div>
+        <div class="input-group">
+            <label for="unit" data-translate="selectUnit">Select Unit:</label>
+            <select id="unit">
+                <option value="mol">mol (moles)</option>
+                <option value="mmol">mmol (millimoles)</option>
+                <option value="umol">µmol (micromoles)</option>
+                <option value="nmol">nmol (nanomoles)</option>
+            </select>
+        </div>
+        <button onclick="calculate()" data-translate="calculate">Calculate</button>
+        <div id="results">
+            <h3 data-translate="results">Results:</h3>
+            <div id="mol-result" class="result-item" data-translate="mol"></div>
+            <div id="mmol-result" class="result-item" data-translate="mmol"></div>
+            <div id="umol-result" class="result-item" data-translate="umol"></div>
+            <div id="nmol-result" class="result-item" data-translate="nmol"></div>
+            <div id="particles-result" class="result-item" data-translate="particles"></div>
+        </div>
+        <div class="language-buttons">
+            <button onclick="redirectToPage('en')">English</button>
+            <button onclick="redirectToPage('es')">Español</button>
+            <button onclick="redirectToPage('de')">Deutsch</button>
+            <button onclick="redirectToPage('pt')">Português</button>
+            <button onclick="redirectToPage('ar')">العربية</button>
+            <button onclick="redirectToPage('zh')">中文</button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: "Molar Calculator",
+                enterValue: "Enter Value:",
+                selectUnit: "Select Unit:",
+                calculate: "Calculate",
+                results: "Results:",
+                mol: "mol: ",
+                mmol: "mmol: ",
+                umol: "µmol: ",
+                nmol: "nmol: ",
+                particles: "Particles: "
+            },
+            es: {
+                title: "Calculadora Molar",
+                enterValue: "Ingrese Valor:",
+                selectUnit: "Seleccione Unidad:",
+                calculate: "Calcular",
+                results: "Resultados:",
+                mol: "mol: ",
+                mmol: "mmol: ",
+                umol: "µmol: ",
+                nmol: "nmol: ",
+                particles: "Partículas: "
+            },
+            de: {
+                title: "Molarrechner",
+                enterValue: "Wert eingeben:",
+                selectUnit: "Einheit wählen:",
+                calculate: "Berechnen",
+                results: "Ergebnisse:",
+                mol: "mol: ",
+                mmol: "mmol: ",
+                umol: "µmol: ",
+                nmol: "nmol: ",
+                particles: "Teilchen: "
+            },
+            pt: {
+                title: "Calculadora Molar",
+                enterValue: "Digite o Valor:",
+                selectUnit: "Selecione a Unidade:",
+                calculate: "Calcular",
+                results: "Resultados:",
+                mol: "mol: ",
+                mmol: "mmol: ",
+                umol: "µmol: ",
+                nmol: "nmol: ",
+                particles: "Partículas: "
+            },
+            ar: {
+                title: "حاسبة مولارية",
+                enterValue: "أدخل القيمة:",
+                selectUnit: "اختر الوحدة:",
+                calculate: "احسب",
+                results: "النتائج:",
+                mol: "مول: ",
+                mmol: "مليمول: ",
+                umol: "ميكرومول: ",
+                nmol: "نانومول: ",
+                particles: "جسيمات: "
+            },
+            zh: {
+                title: "摩尔计算器",
+                enterValue: "输入值：",
+                selectUnit: "选择单位：",
+                calculate: "计算",
+                results: "结果：",
+                mol: "摩尔：",
+                mmol: "毫摩尔：",
+                umol: "微摩尔：",
+                nmol: "纳摩尔：",
+                particles: "粒子数："
+            }
+        };
+
+        let currentLanguage = 'en';
+        let lastResults = null;
+
+        function calculate() {
+            const value = parseFloat(document.getElementById('value').value);
+            const unit = document.getElementById('unit').value;
+            const resultsDiv = document.getElementById('results');
+
+            if (isNaN(value) || value < 0) {
+                alert('Please enter a valid positive number');
+                return;
+            }
+
+            // Convert input to moles first
+            let moles;
+            switch(unit) {
+                case 'mol':
+                    moles = value;
+                    break;
+                case 'mmol':
+                    moles = value / 1000;
+                    break;
+                case 'umol':
+                    moles = value / 1000000;
+                    break;
+                case 'nmol':
+                    moles = value / 1000000000;
+                    break;
+            }
+
+            // Calculate all units including particles using Avogadro's number
+            const AVOGADRO = 6.02214076e23;
+            const mol = moles;
+            const mmol = moles * 1000;
+            const umol = moles * 1000000;
+            const nmol = moles * 1000000000;
+            const particles = moles * AVOGADRO;
+
+            // Store results
+            lastResults = { mol, mmol, umol, nmol, particles };
+
+            // Display results
+            displayResults();
+            resultsDiv.style.display = 'block';
+        }
+
+        function displayResults() {
+            if (!lastResults) return;
+
+            document.getElementById('mol-result').textContent = 
+                `${translations[currentLanguage].mol}${lastResults.mol.toFixed(6)}`;
+            document.getElementById('mmol-result').textContent = 
+                `${translations[currentLanguage].mmol}${lastResults.mmol.toFixed(6)}`;
+            document.getElementById('umol-result').textContent = 
+                `${translations[currentLanguage].umol}${lastResults.umol.toFixed(6)}`;
+            document.getElementById('nmol-result').textContent = 
+                `${translations[currentLanguage].nmol}${lastResults.nmol.toFixed(6)}`;
+            document.getElementById('particles-result').textContent = 
+                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (using Avogadro's number)`;
+        }
+
+        function translate(language) {
+            currentLanguage = language;
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (key in translations[language]) {
+                    if (element.tagName === 'DIV' && lastResults) {
+                        // For result items, only update the label part
+                        element.textContent = translations[language][key];
+                    } else {
+                        element.textContent = translations[language][key];
+                    }
+                }
+            });
+
+            // Update direction for Arabic
+            document.body.style.direction = language === 'ar' ? 'rtl' : 'ltr';
+
+            // Refresh displayed results if they exist
+            displayResults();
+        }
+
+        function redirectToPage(language) {
+            let pageUrl = '';
+
+            // Determine the page URL based on the selected language
+            switch(language) {
+                 case 'en':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10.html';
+                    break;
+                case 'es':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcalc10spanish.html';
+                    break;
+                case 'de':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10german.html';
+                    break;
+                case 'pt':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10pt.html';
+                    break;
+                case 'ar':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10arabic.html';
+                    break;
+                case 'zh':
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10chinese.html';
+                    break;
+                default:
+                    pageUrl = '/molcalc10/molcal10.html';
+            }
+
+            // Redirect to the corresponding page
+            window.location.href = pageUrl;
+        }
+
+        // Set default language to English
+        translate('en');
+    </script>
+</body>
+</html>
