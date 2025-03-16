@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molar Calculator</title>
+    <title>摩尔计算器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,7 +28,7 @@
         input, select {
             padding: 8px;
             width: 200px;
-            margin-right: 10px;
+            margin-left: 10px;
         }
         button {
             padding: 10px 20px;
@@ -59,23 +59,23 @@
 </head>
 <body>
     <div class="calculator">
-        <h2 data-translate="title">Molar Calculator</h2>
+        <h2 data-translate="title">摩尔计算器</h2>
         <div class="input-group">
-            <label for="value" data-translate="enterValue">Enter Value:</label>
-            <input type="number" id="value" step="any" min="0" placeholder="Enter value">
+            <label for="value" data-translate="enterValue">输入值：</label>
+            <input type="number" id="value" step="any" min="0" placeholder="输入值">
         </div>
         <div class="input-group">
-            <label for="unit" data-translate="selectUnit">Select Unit:</label>
+            <label for="unit" data-translate="selectUnit">选择单位：</label>
             <select id="unit">
-                <option value="mol">mol (moles)</option>
-                <option value="mmol">mmol (millimoles)</option>
-                <option value="umol">µmol (micromoles)</option>
-                <option value="nmol">nmol (nanomoles)</option>
+                <option value="mol">摩尔</option>
+                <option value="mmol">毫摩尔</option>
+                <option value="umol">微摩尔</option>
+                <option value="nmol">纳摩尔</option>
             </select>
         </div>
-        <button onclick="calculate()" data-translate="calculate">Calculate</button>
+        <button onclick="calculate()" data-translate="calculate">计算</button>
         <div id="results">
-            <h3 data-translate="results">Results:</h3>
+            <h3 data-translate="results">结果：</h3>
             <div id="mol-result" class="result-item" data-translate="mol"></div>
             <div id="mmol-result" class="result-item" data-translate="mmol"></div>
             <div id="umol-result" class="result-item" data-translate="umol"></div>
@@ -168,7 +168,7 @@
             }
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'zh';
         let lastResults = null;
 
         function calculate() {
@@ -177,11 +177,11 @@
             const resultsDiv = document.getElementById('results');
 
             if (isNaN(value) || value < 0) {
-                alert('Please enter a valid positive number');
+                alert('请输入有效的正数');
                 return;
             }
 
-            // Convert input to moles first
+            // 转换值为摩尔
             let moles;
             switch(unit) {
                 case 'mol':
@@ -198,7 +198,7 @@
                     break;
             }
 
-            // Calculate all units including particles using Avogadro's number
+            // 计算所有单位，包括使用阿伏伽德罗常数的粒子数
             const AVOGADRO = 6.02214076e23;
             const mol = moles;
             const mmol = moles * 1000;
@@ -206,10 +206,10 @@
             const nmol = moles * 1000000000;
             const particles = moles * AVOGADRO;
 
-            // Store results
+            // 存储结果
             lastResults = { mol, mmol, umol, nmol, particles };
 
-            // Display results
+            // 显示结果
             displayResults();
             resultsDiv.style.display = 'block';
         }
@@ -226,18 +226,18 @@
             document.getElementById('nmol-result').textContent = 
                 `${translations[currentLanguage].nmol}${lastResults.nmol.toFixed(6)}`;
             document.getElementById('particles-result').textContent = 
-                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (using Avogadro's number)`;
+                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (使用阿伏伽德罗常数)`;
         }
 
         function translate(language) {
             currentLanguage = language;
             
-            // Update all translatable elements
+            // 更新所有可翻译的元素
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
                 if (key in translations[language]) {
                     if (element.tagName === 'DIV' && lastResults) {
-                        // For result items, only update the label part
+                        // 仅更新包含结果的元素
                         element.textContent = translations[language][key];
                     } else {
                         element.textContent = translations[language][key];
@@ -245,17 +245,17 @@
                 }
             });
 
-            // Update direction for Arabic
+            // 更新语言方向
             document.body.style.direction = language === 'ar' ? 'rtl' : 'ltr';
 
-            // Refresh displayed results if they exist
+            // 更新显示的结果，如果有的话
             displayResults();
         }
 
         function redirectToPage(language) {
             let pageUrl = '';
 
-            // Determine the page URL based on the selected language
+            // 根据选择的语言确定页面地址
             switch(language) {
                  case 'en':
                     pageUrl = '/home/thainara/Documents/molcalc10/molcal10.html';
@@ -273,18 +273,18 @@
                     pageUrl = '/home/thainara/Documents/molcalc10/molcal10arabic.html';
                     break;
                 case 'zh':
-                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10chinese.html';
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcalc10chinese.html';
                     break;
                 default:
                     pageUrl = '/molcalc10/molcal10.html';
             }
 
-            // Redirect to the corresponding page
+            // 导航到指定的页面
             window.location.href = pageUrl;
         }
 
-        // Set default language to English
-        translate('en');
+        // 默认语言设置为中文
+        translate('zh');
     </script>
 </body>
 </html>

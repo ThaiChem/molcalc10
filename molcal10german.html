@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molar Calculator</title>
+    <title>Molarrechner</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,23 +59,23 @@
 </head>
 <body>
     <div class="calculator">
-        <h2 data-translate="title">Molar Calculator</h2>
+        <h2 data-translate="title">Molarrechner</h2>
         <div class="input-group">
-            <label for="value" data-translate="enterValue">Enter Value:</label>
-            <input type="number" id="value" step="any" min="0" placeholder="Enter value">
+            <label for="value" data-translate="enterValue">Wert eingeben:</label>
+            <input type="number" id="value" step="any" min="0" placeholder="Wert eingeben">
         </div>
         <div class="input-group">
-            <label for="unit" data-translate="selectUnit">Select Unit:</label>
+            <label for="unit" data-translate="selectUnit">Einheit wählen:</label>
             <select id="unit">
-                <option value="mol">mol (moles)</option>
-                <option value="mmol">mmol (millimoles)</option>
-                <option value="umol">µmol (micromoles)</option>
-                <option value="nmol">nmol (nanomoles)</option>
+                <option value="mol">mol (Molen)</option>
+                <option value="mmol">mmol (Millimolen)</option>
+                <option value="umol">µmol (Mikromolen)</option>
+                <option value="nmol">nmol (Nanomolen)</option>
             </select>
         </div>
-        <button onclick="calculate()" data-translate="calculate">Calculate</button>
+        <button onclick="calculate()" data-translate="calculate">Berechnen</button>
         <div id="results">
-            <h3 data-translate="results">Results:</h3>
+            <h3 data-translate="results">Ergebnisse:</h3>
             <div id="mol-result" class="result-item" data-translate="mol"></div>
             <div id="mmol-result" class="result-item" data-translate="mmol"></div>
             <div id="umol-result" class="result-item" data-translate="umol"></div>
@@ -83,12 +83,12 @@
             <div id="particles-result" class="result-item" data-translate="particles"></div>
         </div>
         <div class="language-buttons">
-            <button onclick="redirectToPage('en')">English</button>
-            <button onclick="redirectToPage('es')">Español</button>
+            <button onclick="redirectToPage('en')">Englisch</button>
+            <button onclick="redirectToPage('es')">Spanisch</button>
             <button onclick="redirectToPage('de')">Deutsch</button>
-            <button onclick="redirectToPage('pt')">Português</button>
-            <button onclick="redirectToPage('ar')">العربية</button>
-            <button onclick="redirectToPage('zh')">中文</button>
+            <button onclick="redirectToPage('pt')">Portugiesisch</button>
+            <button onclick="redirectToPage('ar')">Arabisch</button>
+            <button onclick="redirectToPage('zh')">Chinesisch</button>
         </div>
     </div>
 
@@ -168,7 +168,7 @@
             }
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'de';
         let lastResults = null;
 
         function calculate() {
@@ -177,11 +177,11 @@
             const resultsDiv = document.getElementById('results');
 
             if (isNaN(value) || value < 0) {
-                alert('Please enter a valid positive number');
+                alert('Bitte geben Sie eine gültige positive Zahl ein');
                 return;
             }
 
-            // Convert input to moles first
+            // Umrechnung in Mol
             let moles;
             switch(unit) {
                 case 'mol':
@@ -198,7 +198,7 @@
                     break;
             }
 
-            // Calculate all units including particles using Avogadro's number
+            // Berechnung aller Einheiten einschließlich Teilchen mit Avogadros Zahl
             const AVOGADRO = 6.02214076e23;
             const mol = moles;
             const mmol = moles * 1000;
@@ -206,10 +206,10 @@
             const nmol = moles * 1000000000;
             const particles = moles * AVOGADRO;
 
-            // Store results
+            // Ergebnisse speichern
             lastResults = { mol, mmol, umol, nmol, particles };
 
-            // Display results
+            // Ergebnisse anzeigen
             displayResults();
             resultsDiv.style.display = 'block';
         }
@@ -226,18 +226,18 @@
             document.getElementById('nmol-result').textContent = 
                 `${translations[currentLanguage].nmol}${lastResults.nmol.toFixed(6)}`;
             document.getElementById('particles-result').textContent = 
-                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (using Avogadro's number)`;
+                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (mit Avogadros Zahl)`;
         }
 
         function translate(language) {
             currentLanguage = language;
             
-            // Update all translatable elements
+            // Alle übersetzbaren Elemente aktualisieren
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
                 if (key in translations[language]) {
                     if (element.tagName === 'DIV' && lastResults) {
-                        // For result items, only update the label part
+                        // Für Ergebnis-Elemente nur den Textteil aktualisieren
                         element.textContent = translations[language][key];
                     } else {
                         element.textContent = translations[language][key];
@@ -245,19 +245,19 @@
                 }
             });
 
-            // Update direction for Arabic
+            // Richtung für Arabisch anpassen
             document.body.style.direction = language === 'ar' ? 'rtl' : 'ltr';
 
-            // Refresh displayed results if they exist
+            // Ergebnisse neu anzeigen, falls sie vorhanden sind
             displayResults();
         }
 
         function redirectToPage(language) {
             let pageUrl = '';
 
-            // Determine the page URL based on the selected language
+            // Bestimmen Sie die URL der Seite basierend auf der ausgewählten Sprache
             switch(language) {
-                 case 'en':
+                case 'en':
                     pageUrl = '/home/thainara/Documents/molcalc10/molcal10.html';
                     break;
                 case 'es':
@@ -279,12 +279,12 @@
                     pageUrl = '/molcalc10/molcal10.html';
             }
 
-            // Redirect to the corresponding page
+            // Zur entsprechenden Seite umleiten
             window.location.href = pageUrl;
         }
 
-        // Set default language to English
-        translate('en');
+        // Standardmäßig auf Deutsch setzen
+        translate('de');
     </script>
 </body>
 </html>

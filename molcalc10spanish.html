@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Molar Calculator</title>
+    <title>Calculadora Molar</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,23 +59,23 @@
 </head>
 <body>
     <div class="calculator">
-        <h2 data-translate="title">Molar Calculator</h2>
+        <h2 data-translate="title">Calculadora Molar</h2>
         <div class="input-group">
-            <label for="value" data-translate="enterValue">Enter Value:</label>
-            <input type="number" id="value" step="any" min="0" placeholder="Enter value">
+            <label for="value" data-translate="enterValue">Ingrese Valor:</label>
+            <input type="number" id="value" step="any" min="0" placeholder="Ingrese valor">
         </div>
         <div class="input-group">
-            <label for="unit" data-translate="selectUnit">Select Unit:</label>
+            <label for="unit" data-translate="selectUnit">Seleccione Unidad:</label>
             <select id="unit">
                 <option value="mol">mol (moles)</option>
-                <option value="mmol">mmol (millimoles)</option>
+                <option value="mmol">mmol (milimoles)</option>
                 <option value="umol">µmol (micromoles)</option>
                 <option value="nmol">nmol (nanomoles)</option>
             </select>
         </div>
-        <button onclick="calculate()" data-translate="calculate">Calculate</button>
+        <button onclick="calculate()" data-translate="calculate">Calcular</button>
         <div id="results">
-            <h3 data-translate="results">Results:</h3>
+            <h3 data-translate="results">Resultados:</h3>
             <div id="mol-result" class="result-item" data-translate="mol"></div>
             <div id="mmol-result" class="result-item" data-translate="mmol"></div>
             <div id="umol-result" class="result-item" data-translate="umol"></div>
@@ -168,7 +168,7 @@
             }
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'es';
         let lastResults = null;
 
         function calculate() {
@@ -177,7 +177,7 @@
             const resultsDiv = document.getElementById('results');
 
             if (isNaN(value) || value < 0) {
-                alert('Please enter a valid positive number');
+                alert('Por favor, ingrese un número válido y positivo');
                 return;
             }
 
@@ -226,7 +226,7 @@
             document.getElementById('nmol-result').textContent = 
                 `${translations[currentLanguage].nmol}${lastResults.nmol.toFixed(6)}`;
             document.getElementById('particles-result').textContent = 
-                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (using Avogadro's number)`;
+                `${translations[currentLanguage].particles}${lastResults.particles.toExponential(6)} (usando el número de Avogadro)`;
         }
 
         function translate(language) {
@@ -273,7 +273,7 @@
                     pageUrl = '/home/thainara/Documents/molcalc10/molcal10arabic.html';
                     break;
                 case 'zh':
-                    pageUrl = '/home/thainara/Documents/molcalc10/molcal10chinese.html';
+                    pageUrl = '/home/thainara/Documents/molcalc10/molcalc10chinese.html';
                     break;
                 default:
                     pageUrl = '/molcalc10/molcal10.html';
@@ -283,8 +283,12 @@
             window.location.href = pageUrl;
         }
 
-        // Set default language to English
-        translate('en');
+        // Set default language to Spanish
+        translate('es');
     </script>
 </body>
 </html>
+
+
+
+
